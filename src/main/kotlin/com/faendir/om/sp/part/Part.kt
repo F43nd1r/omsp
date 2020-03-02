@@ -1,6 +1,6 @@
-package com.faendir.omsp.part
+package com.faendir.om.sp.part
 
-import com.faendir.omsp.base.Action
+import com.faendir.om.sp.base.Action
 
 abstract class Part {
     abstract val name: String

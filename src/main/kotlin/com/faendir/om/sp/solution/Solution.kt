@@ -1,6 +1,6 @@
-package com.faendir.omsp.solution
+package com.faendir.om.sp.solution
 
-import com.faendir.omsp.part.Part
+import com.faendir.om.sp.part.Part
 
 interface Solution {
     var puzzle: String

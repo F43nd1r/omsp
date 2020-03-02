@@ -1,4 +1,4 @@
-package com.faendir.omsp.part
+package com.faendir.om.sp.part
 
 enum class IOType(internal val key: String) {
     INPUT("input"),

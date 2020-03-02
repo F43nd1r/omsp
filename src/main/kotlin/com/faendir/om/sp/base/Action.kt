@@ -1,4 +1,4 @@
-package com.faendir.omsp.base
+package com.faendir.om.sp.base
 
 enum class Action(val key: Char) {
     ROTATE_CLOCKWISE('R'),

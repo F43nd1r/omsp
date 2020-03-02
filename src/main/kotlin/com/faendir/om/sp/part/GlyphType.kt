@@ -1,4 +1,4 @@
-package com.faendir.omsp.part
+package com.faendir.om.sp.part
 
 enum class GlyphType(internal val key: String) {
     BONDER("bonder"),

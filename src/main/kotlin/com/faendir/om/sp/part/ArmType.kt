@@ -1,4 +1,4 @@
-package com.faendir.omsp.part
+package com.faendir.om.sp.part
 
 enum class ArmType(internal val key: String) {
     ARM1("arm1"),

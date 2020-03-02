@@ -1,12 +1,12 @@
-package com.faendir.omsp
+package com.faendir.om.sp
 
-import com.faendir.omsp.base.Action
-import com.faendir.omsp.csharp.CSharpBinaryReader
-import com.faendir.omsp.csharp.CSharpBinaryWriter
-import com.faendir.omsp.part.*
-import com.faendir.omsp.solution.NonSolvedSolution
-import com.faendir.omsp.solution.Solution
-import com.faendir.omsp.solution.SolvedSolution
+import com.faendir.om.sp.base.Action
+import com.faendir.om.sp.csharp.CSharpBinaryReader
+import com.faendir.om.sp.csharp.CSharpBinaryWriter
+import com.faendir.om.sp.part.*
+import com.faendir.om.sp.solution.NonSolvedSolution
+import com.faendir.om.sp.solution.Solution
+import com.faendir.om.sp.solution.SolvedSolution
 import java.io.InputStream
 import java.io.OutputStream
 

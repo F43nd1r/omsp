@@ -1,7 +1,7 @@
-package com.faendir.omsp
+package com.faendir.om.sp
 
-import com.faendir.omsp.solution.NonSolvedSolution
-import com.faendir.omsp.solution.SolvedSolution
+import com.faendir.om.sp.solution.NonSolvedSolution
+import com.faendir.om.sp.solution.SolvedSolution
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.instanceOf

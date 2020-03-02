@@ -1,4 +1,4 @@
-package com.faendir.omsp.csharp
+package com.faendir.om.sp.csharp
 
 import java.io.EOFException
 import java.io.InputStream

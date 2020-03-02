@@ -1,4 +1,4 @@
-package com.faendir.omsp.part
+package com.faendir.om.sp.part
 
 data class IO(
     override var index: Int,

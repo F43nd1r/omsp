@@ -3,8 +3,8 @@ plugins {
     `maven-publish`
 }
 
-group = "com.faendir.omsp"
-version = "1.0.0"
+group = "com.faendir.om"
+version = "1.0.1"
 
 repositories {
     mavenCentral()
