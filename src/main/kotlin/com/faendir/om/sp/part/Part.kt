@@ -12,4 +12,6 @@ abstract class Part {
     open var index: Int = 0
 }
 
-typealias Position = Pair<Int, Int>
+data class Position(val x: Int, val y: Int)
+
+infix fun Int.to(other: Int) : Position = Position(this, other)

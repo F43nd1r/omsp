@@ -34,7 +34,7 @@ object SolutionParser {
             solution.parts = (0 until partCount).map {
                 val partName = reader.readString()
                 if (reader.readByte() != 1.toByte()) throw IllegalArgumentException("Malformed solution.")
-                val position = reader.readInt() to reader.readInt()
+                val position : Position = reader.readInt() to reader.readInt()
                 val size = reader.readInt()
                 val rotation = reader.readInt()
                 val index = reader.readInt()
@@ -70,8 +70,8 @@ object SolutionParser {
             solution.parts.forEach { part ->
                 writer.write(part.name)
                 writer.write(1.toByte())
-                writer.write(part.position.first)
-                writer.write(part.position.second)
+                writer.write(part.position.x)
+                writer.write(part.position.y)
                 writer.write(part.size)
                 writer.write(part.rotation)
                 writer.write(part.index)
@@ -87,8 +87,8 @@ object SolutionParser {
                 if (part is Track) {
                     writer.write(part.positions.size)
                     part.positions.forEach {
-                        writer.write(it.first)
-                        writer.write(it.second)
+                        writer.write(it.x)
+                        writer.write(it.y)
                     }
                 }
                 writer.write(part.number)
