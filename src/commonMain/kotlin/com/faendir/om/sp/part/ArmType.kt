@@ -6,7 +6,7 @@ enum class ArmType(internal val key: String) {
     ARM3("arm3"),
     ARM6("arm6"),
     PISTON("piston"),
-    VAN_BERLOS_WHEEl("baron");
+    VAN_BERLOS_WHEEL("baron");
 
     companion object {
         fun fromString(key: String): ArmType? {

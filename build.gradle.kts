@@ -1,42 +1,61 @@
 plugins {
-    kotlin("jvm") version "1.3.61"
+    kotlin("multiplatform") version "1.3.70"
     `maven-publish`
 }
 
 group = "com.faendir.om"
-version = "1.0.2"
+version = "1.1.3"
 
 repositories {
     mavenCentral()
-    maven { setUrl("https://dl.bintray.com/juanchosaravia/autodsl") }
+}
 
+kotlin {
+    jvm {
+        val main by compilations.getting {
+            kotlinOptions {
+                jvmTarget = "1.8"
+            }
+        }
+    }
+    js()
+    val kotlinxioVersion = "0.1.16"
+    sourceSets {
+        val commonMain by getting {
+            dependencies {
+                implementation(kotlin("stdlib-common"))
+                api("org.jetbrains.kotlinx:kotlinx-io:$kotlinxioVersion")
+            }
+        }
+        val commonTest by getting {
+            dependencies {
+                implementation(kotlin("test-common"))
+                implementation(kotlin("test-annotations-common"))
+            }
+        }
+        val jvmMain by getting {
+            dependencies {
+                implementation(kotlin("stdlib-jdk8"))
+                api("org.jetbrains.kotlinx:kotlinx-io-jvm:$kotlinxioVersion")
+            }
+        }
+        val jvmTest by getting {
+            dependencies {
+                implementation(kotlin("test-junit"))
+                implementation("org.hamcrest:hamcrest:2.2")
+            }
+        }
+        val jsMain by getting {
+            dependencies {
+                implementation(kotlin("stdlib-js"))
+                api("org.jetbrains.kotlinx:kotlinx-io-js:$kotlinxioVersion")
+            }
+        }
+    }
 }
 
 dependencies {
-    implementation(kotlin("stdlib-jdk8"))
-    testImplementation("org.junit.jupiter:junit-jupiter:5.6.0")
-    testImplementation("org.hamcrest:hamcrest:2.2")
-}
-
-tasks.test {
-    useJUnitPlatform()
-    testLogging {
-        events("passed", "skipped", "failed")
-    }
-}
-
-tasks {
-    compileKotlin {
-        kotlinOptions.jvmTarget = "1.8"
-    }
-    compileTestKotlin {
-        kotlinOptions.jvmTarget = "1.8"
-    }
-}
-
-val sourcesJar by tasks.registering(Jar::class) {
-    classifier = "sources"
-    from(sourceSets.main.get().allSource)
+    //testImplementation("org.junit.jupiter:junit-jupiter:5.6.0")
 }
 
 publishing {
@@ -51,35 +70,32 @@ publishing {
             }
         }
     }
-    publications {
-        create<MavenPublication>("maven") {
-            from(components["java"])
-            artifact(sourcesJar.get())
-            pom {
-                name.set("omsp")
-                description.set("Opus Magnum Solution Parser")
-                url.set("https://github.com/F43nd1r/omsp")
+    publications.filterIsInstance<MavenPublication>().forEach {
+        it.pom {
+            name.set("omsp")
+            description.set("Opus Magnum Solution Parser")
+            url.set("https://github.com/F43nd1r/omsp")
 
-                scm {
-                    connection.set("scm:git:https://github.com/F43nd1r/omsp.git")
-                    developerConnection.set("scm:git:git@github.com:F43nd1r/omsp.git")
-                    url.set("https://github.com/F43nd1r/omsp.git")
+            scm {
+                connection.set("scm:git:https://github.com/F43nd1r/omsp.git")
+                developerConnection.set("scm:git:git@github.com:F43nd1r/omsp.git")
+                url.set("https://github.com/F43nd1r/omsp.git")
+            }
+
+            licenses {
+                license {
+                    name.set("The Apache License, Version 2.0")
+                    distribution.set("repo")
                 }
+            }
 
-                licenses {
-                    license {
-                        name.set("The Apache License, Version 2.0")
-                        distribution.set("repo")
-                    }
-                }
-
-                developers {
-                    developer {
-                        id.set("f43nd1r")
-                        name.set("Lukas Morawietz")
-                    }
+            developers {
+                developer {
+                    id.set("f43nd1r")
+                    name.set("Lukas Morawietz")
                 }
             }
         }
+
     }
 }

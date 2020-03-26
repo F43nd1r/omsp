@@ -7,12 +7,13 @@ import com.faendir.om.sp.part.*
 import com.faendir.om.sp.solution.NonSolvedSolution
 import com.faendir.om.sp.solution.Solution
 import com.faendir.om.sp.solution.SolvedSolution
-import java.io.InputStream
-import java.io.OutputStream
+import kotlinx.io.core.Input
+import kotlinx.io.core.Output
+import kotlinx.io.core.use
 
 object SolutionParser {
 
-    fun parse(input: InputStream): Solution {
+    fun parse(input: Input): Solution {
         CSharpBinaryReader(input).use { reader ->
             if (reader.readInt() != 7) throw IllegalArgumentException("Input is not an Opus Magnum solution.")
             val puzzle = reader.readString()
@@ -59,7 +60,7 @@ object SolutionParser {
         }
     }
 
-    fun write(solution: Solution, output: OutputStream) {
+    fun write(solution: Solution, output: Output) {
         CSharpBinaryWriter(output).use { writer ->
             writer.write(7)
             writer.write(solution.puzzle)
