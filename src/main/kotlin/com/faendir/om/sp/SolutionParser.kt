@@ -48,12 +48,13 @@ object SolutionParser {
                     step = pos + 1
                     result
                 }
-                val pipeId = if(partName == "pipe") reader.readInt() else null
-                val morePositions = if (partName == "track" || partName == "pipe") (0 until reader.readInt()).map { reader.readInt() to reader.readInt() } else null
+                val trackPositions = if (partName == "track") (0 until reader.readInt()).map { reader.readInt() to reader.readInt() } else null
+
                 val number = reader.readInt() + 1
+                val pipeDetails =  if(partName == "pipe") reader.readInt() to (0 until reader.readInt()).map { reader.readInt() to reader.readInt() } else null
                 ArmType.fromString(partName)?.let { Arm(number, position, rotation, size, steps, it) }
-                        ?: pipeId?.let { Conduit(position, it, morePositions!!) }
-                        ?: morePositions?.let { Track(position, it) }
+                        ?: pipeDetails?.let { Conduit(position, it.first, it.second) }
+                        ?: trackPositions?.let { Track(position, it) }
                         ?: IOType.fromString(partName)?.let { IO(index, position, rotation, it) }
                         ?: GlyphType.fromString(partName)?.let { Glyph(position, rotation, it) }
                         ?: throw IllegalArgumentException("$partName is not a valid part type.")
@@ -87,13 +88,6 @@ object SolutionParser {
                     }
                     step++
                 }
-                if(part is Conduit) {
-                    writer.write(part.id)
-                    part.positions.forEach {
-                        writer.write(it.x)
-                        writer.write(it.y)
-                    }
-                }
                 if (part is Track) {
                     writer.write(part.positions.size)
                     part.positions.forEach {
@@ -102,6 +96,13 @@ object SolutionParser {
                     }
                 }
                 writer.write(part.number - 1)
+                if(part is Conduit) {
+                    writer.write(part.id)
+                    part.positions.forEach {
+                        writer.write(it.x)
+                        writer.write(it.y)
+                    }
+                }
             }
         }
     }
