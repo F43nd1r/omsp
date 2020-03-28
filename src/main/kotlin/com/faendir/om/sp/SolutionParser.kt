@@ -49,7 +49,7 @@ object SolutionParser {
                     result
                 }
                 val trackPositions = if (partName == "track") (0 until reader.readInt()).map { reader.readInt() to reader.readInt() } else null
-                val number = reader.readInt()
+                val number = reader.readInt() + 1
                 ArmType.fromString(partName)?.let { Arm(number, position, rotation, size, steps, it) }
                         ?: trackPositions?.let { Track(position, it) }
                         ?: IOType.fromString(partName)?.let { IO(index, position, rotation, it) }
@@ -92,7 +92,7 @@ object SolutionParser {
                         writer.write(it.y)
                     }
                 }
-                writer.write(part.number)
+                writer.write(part.number - 1)
             }
         }
     }
