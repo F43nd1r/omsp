@@ -98,6 +98,7 @@ object SolutionParser {
                 writer.write(part.number - 1)
                 if(part is Conduit) {
                     writer.write(part.id)
+                    writer.write(part.positions.size)
                     part.positions.forEach {
                         writer.write(it.x)
                         writer.write(it.y)
