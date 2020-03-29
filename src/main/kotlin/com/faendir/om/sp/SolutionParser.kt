@@ -53,7 +53,7 @@ object SolutionParser {
                 val number = reader.readInt() + 1
                 val pipeDetails =  if(partName == "pipe") reader.readInt() to (0 until reader.readInt()).map { reader.readInt() to reader.readInt() } else null
                 ArmType.fromString(partName)?.let { Arm(number, position, rotation, size, steps, it) }
-                        ?: pipeDetails?.let { Conduit(position, it.first, it.second) }
+                        ?: pipeDetails?.let { Conduit(position, rotation, it.first, it.second) }
                         ?: trackPositions?.let { Track(position, it) }
                         ?: IOType.fromString(partName)?.let { IO(index, position, rotation, it) }
                         ?: GlyphType.fromString(partName)?.let { Glyph(position, rotation, it) }
