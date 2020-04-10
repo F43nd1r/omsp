@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "com.faendir.om"
-version = "2.0.0"
+version = "2.0.1"
 
 repositories {
     mavenCentral()
@@ -48,8 +48,9 @@ publishing {
             from(components["kotlin"])
             artifact(sourcesJar)
             pom {
-                name.set("parser")
-                description.set("Opus Magnum Solution Parser")
+                artifactId = "parser"
+                name.set("om-parser")
+                description.set("Opus Magnum Solution/Puzzle Parser")
                 url.set("https://github.com/F43nd1r/omsp")
 
                 scm {
