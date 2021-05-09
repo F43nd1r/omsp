@@ -1,6 +1,9 @@
 plugins {
-    kotlin("jvm") version "1.3.71"
+    kotlin("jvm") version "1.4.32"
     `maven-publish`
+    signing
+    id("org.jetbrains.dokka") version "1.4.32"
+    id("io.github.gradle-nexus.publish-plugin") version "1.0.0"
 }
 
 group = "com.faendir.om"
@@ -26,27 +29,27 @@ tasks {
     }
 }
 
-val sourcesJar by tasks.creating(Jar::class) {
+val javadocJar = tasks.register<Jar>("javadocJar") {
+    group = "documentation"
+    from(tasks["dokkaJavadoc"])
+    archiveClassifier.set("javadoc")
+}
+
+val sourcesJar = tasks.register<Jar>("sourcesJar") {
+    group = "documentation"
+    from(sourceSets["main"].allSource)
     archiveClassifier.set("sources")
-    from(sourceSets.getByName("main").allSource)
 }
 
 publishing {
     repositories {
         mavenLocal()
-        maven {
-            setUrl("https://api.bintray.com/maven/f43nd1r/maven/omsp/;publish=1")
-            name = "bintray"
-            credentials {
-                username = findProperty("artifactoryUser") as String?
-                password = findProperty("artifactoryApiKey") as String?
-            }
-        }
     }
     publications {
         create<MavenPublication>("maven") {
             from(components["kotlin"])
             artifact(sourcesJar)
+            artifact(javadocJar)
             pom {
                 artifactId = "parser"
                 name.set("om-parser")
@@ -75,4 +78,24 @@ publishing {
             }
         }
     }
+}
+
+signing {
+    val signingKey = project.findProperty("signingKey") as? String ?: System.getenv("SIGNING_KEY")
+    val signingPassword = project.findProperty("signingPassword") as? String ?: System.getenv("SIGNING_PASSWORD")
+    useInMemoryPgpKeys(signingKey, signingPassword)
+    sign(publishing.publications["maven"])
+}
+
+nexusPublishing {
+    repositories {
+        sonatype {
+            username.set(project.findProperty("ossrhUser") as? String ?: System.getenv("OSSRH_USER"))
+            password.set(project.findProperty("ossrhPassword") as? String ?: System.getenv("OSSRH_PASSWORD"))
+        }
+    }
+}
+
+tasks.getByName("publish") {
+    dependsOn("publishToSonatype", "closeAndReleaseSonatypeStagingRepository")
 }
