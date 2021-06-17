@@ -56,35 +56,31 @@ publishing {
     repositories {
         mavenLocal()
     }
-    publications {
-        create<MavenPublication>("maven") {
-            from(components["kotlin"])
-            artifact(tasks["sourcesJar"])
-            artifact(javadocJar)
-            pom {
-                artifactId = "parser"
-                name.set("om-parser")
-                description.set("Opus Magnum Solution/Puzzle Parser")
-                url.set("https://github.com/F43nd1r/omsp")
+    publications.withType<MavenPublication> {
+        artifact(javadocJar)
+        pom {
+            artifactId = "parser"
+            name.set("om-parser")
+            description.set("Opus Magnum Solution/Puzzle Parser")
+            url.set("https://github.com/F43nd1r/omsp")
 
-                scm {
-                    connection.set("scm:git:https://github.com/F43nd1r/omsp.git")
-                    developerConnection.set("scm:git:git@github.com:F43nd1r/omsp.git")
-                    url.set("https://github.com/F43nd1r/omsp.git")
+            scm {
+                connection.set("scm:git:https://github.com/F43nd1r/omsp.git")
+                developerConnection.set("scm:git:git@github.com:F43nd1r/omsp.git")
+                url.set("https://github.com/F43nd1r/omsp.git")
+            }
+
+            licenses {
+                license {
+                    name.set("The Apache License, Version 2.0")
+                    distribution.set("repo")
                 }
+            }
 
-                licenses {
-                    license {
-                        name.set("The Apache License, Version 2.0")
-                        distribution.set("repo")
-                    }
-                }
-
-                developers {
-                    developer {
-                        id.set("f43nd1r")
-                        name.set("Lukas Morawietz")
-                    }
+            developers {
+                developer {
+                    id.set("f43nd1r")
+                    name.set("Lukas Morawietz")
                 }
             }
         }
@@ -92,8 +88,10 @@ publishing {
 }
 
 signing {
-    val signingKey = project.findProperty("signingKey") as? String ?: System.getenv("SIGNING_KEY")
-    val signingPassword = project.findProperty("signingPassword") as? String ?: System.getenv("SIGNING_PASSWORD")
+    val signingKey = project.findProperty("signingKey") as? String
+        ?: System.getenv("SIGNING_KEY")
+    val signingPassword = project.findProperty("signingPassword") as? String
+        ?: System.getenv("SIGNING_PASSWORD")
     useInMemoryPgpKeys(signingKey, signingPassword)
     sign(publishing.publications)
 }
