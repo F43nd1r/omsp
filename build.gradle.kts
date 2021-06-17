@@ -13,3 +13,12 @@ nexusPublishing {
         }
     }
 }
+
+tasks.register("publish") {
+    group = "publishing"
+    subprojects {
+        tasks.findByName("publish")?.let { dependsOn(it) }
+        tasks.findByName("publishToSonatype")?.let { dependsOn(it) }
+    }
+    dependsOn("closeAndReleaseSonatypeStagingRepository")
+}

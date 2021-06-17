@@ -97,7 +97,3 @@ signing {
     useInMemoryPgpKeys(signingKey, signingPassword)
     sign(publishing.publications["maven"])
 }
-
-tasks.getByName("publish") {
-    dependsOn("publishToSonatype", "closeAndReleaseSonatypeStagingRepository")
-}
