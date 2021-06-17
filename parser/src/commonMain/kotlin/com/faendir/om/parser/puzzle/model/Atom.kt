@@ -1,6 +1,6 @@
 package com.faendir.om.parser.puzzle.model
 
-enum class Atom(internal var id: Byte) {
+enum class Atom(internal val id: Byte) {
     SALT(0x1),
     AIR(0x2),
     EARTH(0x3),

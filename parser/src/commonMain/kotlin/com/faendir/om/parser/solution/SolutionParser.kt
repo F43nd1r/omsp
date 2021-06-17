@@ -4,13 +4,13 @@ import com.faendir.om.parser.csharp.CSharpBinaryReader
 import com.faendir.om.parser.csharp.CSharpBinaryWriter
 import com.faendir.om.parser.solution.model.*
 import com.faendir.om.parser.solution.model.part.*
-import kotlinx.io.core.Input
-import kotlinx.io.core.Output
-import kotlinx.io.core.use
+import okio.BufferedSink
+import okio.BufferedSource
+import okio.use
 
 object SolutionParser {
 
-    fun parse(input: Input): Solution {
+    fun parse(input: BufferedSource): Solution {
         CSharpBinaryReader(input).use { reader ->
             if (reader.readInt() != 7) throw IllegalArgumentException("Input is not an Opus Magnum solution.")
             val puzzle = reader.readString()
@@ -60,7 +60,7 @@ object SolutionParser {
 
     private fun CSharpBinaryReader.readPosition() = Position(readInt(), readInt())
 
-    fun write(solution: Solution, output: Output) {
+    fun write(solution: Solution, output: BufferedSink) {
         CSharpBinaryWriter(output).use { writer ->
             writer.write(7)
             writer.write(solution.puzzle)

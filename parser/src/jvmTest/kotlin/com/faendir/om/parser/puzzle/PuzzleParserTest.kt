@@ -1,9 +1,9 @@
 package com.faendir.om.parser.puzzle
 
 import com.faendir.om.parser.puzzle.model.Puzzle
-import kotlinx.io.core.readBytes
-import kotlinx.io.streams.asInput
-import kotlinx.io.streams.asOutput
+import okio.buffer
+import okio.sink
+import okio.source
 import org.hamcrest.MatcherAssert
 import org.hamcrest.Matchers
 import org.junit.Test
@@ -11,7 +11,7 @@ import java.io.ByteArrayOutputStream
 
 internal class PuzzleParserTest {
 
-    private fun getProductionStream() = javaClass.classLoader.getResourceAsStream("test_production.puzzle")!!.asInput()
+    private fun getProductionStream() = javaClass.classLoader.getResourceAsStream("test_production.puzzle")!!.source().buffer()
 
     @Test
     fun parse() {
@@ -22,11 +22,11 @@ internal class PuzzleParserTest {
 
     @Test
     fun write() {
-        val compare = getProductionStream().readBytes()
+        val compare = getProductionStream().readByteArray()
 
         val puzzle = PuzzleParser.parse(getProductionStream())
         val out = ByteArrayOutputStream()
-        PuzzleParser.write(puzzle, out.asOutput())
+        PuzzleParser.write(puzzle, out.sink().buffer())
         MatcherAssert.assertThat(out.toByteArray(), Matchers.equalTo(compare))
     }
 }

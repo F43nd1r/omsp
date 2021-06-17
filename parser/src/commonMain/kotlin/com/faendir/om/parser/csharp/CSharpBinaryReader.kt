@@ -1,33 +1,35 @@
 package com.faendir.om.parser.csharp
 
 import com.faendir.om.parser.util.ZERO
-import kotlinx.io.core.*
+import okio.BufferedSource
+import okio.Closeable
+import okio.Source
 
 
-class CSharpBinaryReader(private val input: Input) : Closeable {
-    fun readInt(): Int = input.readIntLittleEndian()
+class CSharpBinaryReader(private val input: BufferedSource) : Closeable {
+    fun readInt(): Int = input.readIntLe()
 
-    fun readLong(): Long = input.readLongLittleEndian()
+    fun readLong(): Long = input.readLongLe()
 
     fun readByte(): Byte = input.readByte()
 
-    fun readChar(): Char = readByte().toChar()
+    fun readChar(): Char = readByte().toInt().toChar()
 
     fun readBoolean(): Boolean = readByte() != Byte.ZERO
 
     fun readString(): String {
         val length = getStringLength()
-        return input.readTextExactBytes(length)
+        return input.readUtf8(length)
     }
 
-    private fun getStringLength(): Int {
-        var count = 0
+    private fun getStringLength(): Long {
+        var count = 0L
         var shift = 0
         do {
-            val b = input.readByte().toInt()
+            val b = input.readByte().toLong()
             count = count or (b and 0x7F) shl shift
             shift += 7
-        } while (b and 0x80 != 0)
+        } while (b and 0x80 != 0L)
         return count
     }
 

@@ -3,13 +3,13 @@ package com.faendir.om.parser.puzzle
 import com.faendir.om.parser.csharp.CSharpBinaryReader
 import com.faendir.om.parser.csharp.CSharpBinaryWriter
 import com.faendir.om.parser.puzzle.model.*
-import kotlinx.io.core.Input
-import kotlinx.io.core.Output
-import kotlinx.io.core.use
+import okio.BufferedSink
+import okio.BufferedSource
+import okio.use
 
 object PuzzleParser {
 
-    fun parse(input: Input): Puzzle {
+    fun parse(input: BufferedSource): Puzzle {
         CSharpBinaryReader(input).use { reader ->
             if (reader.readInt() != 3) throw IllegalArgumentException("Input is not an Opus Magnum puzzle.")
             val name = reader.readString()
@@ -42,7 +42,7 @@ object PuzzleParser {
     private fun CSharpBinaryReader.readHexIndex() = HexIndex(readByte(), readByte())
 
 
-    fun write(puzzle: Puzzle, output: Output) {
+    fun write(puzzle: Puzzle, output: BufferedSink) {
         CSharpBinaryWriter(output).use { writer ->
             writer.write(3)
             writer.write(puzzle.name)

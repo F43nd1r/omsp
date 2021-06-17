@@ -1,16 +1,17 @@
 package com.faendir.om.parser.csharp
 
-import kotlinx.io.core.*
+import okio.BufferedSink
+import okio.Closeable
 
-class CSharpBinaryWriter(private val output: Output) : Closeable {
-    fun write(i: Int) = output.writeIntLittleEndian(i)
+class CSharpBinaryWriter(private val output: BufferedSink) : Closeable {
+    fun write(i: Int) = output.writeIntLe(i)
 
-    fun write(l: Long) = output.writeLongLittleEndian(l)
+    fun write(l: Long) = output.writeLongLe(l)
 
-    fun write(b: Byte) = output.writeByte(b)
+    fun write(b: Byte) = output.writeByte(b.toInt())
 
     fun write(c: Char) {
-        output.writeByte(c.toByte())
+        output.writeByte(c.code)
     }
 
     fun write(b: Boolean) {
@@ -18,18 +19,18 @@ class CSharpBinaryWriter(private val output: Output) : Closeable {
     }
 
     fun write(s: String) {
-        val bytes = s.toByteArray()
+        val bytes = s.encodeToByteArray()
         writeStringLength(bytes.size)
-        output.writeFully(bytes, 0, bytes.size)
+        output.write(bytes, 0, bytes.size)
     }
 
     private fun writeStringLength(length: Int) {
         var v = length
         while (v >= 0x80) {
-            output.writeByte((v or 0x80).toByte())
+            output.writeByte((v or 0x80))
             v = v shr 7
         }
-        output.writeByte(v.toByte())
+        output.writeByte(v)
     }
 
     fun <T> write(list: List<T>, writeOne: CSharpBinaryWriter.(T) -> Unit) {

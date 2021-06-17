@@ -2,9 +2,9 @@ package com.faendir.om.parser.solution
 
 import com.faendir.om.parser.solution.model.NonSolvedSolution
 import com.faendir.om.parser.solution.model.SolvedSolution
-import kotlinx.io.core.readBytes
-import kotlinx.io.streams.asInput
-import kotlinx.io.streams.asOutput
+import okio.buffer
+import okio.sink
+import okio.source
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.instanceOf
@@ -13,8 +13,8 @@ import java.io.ByteArrayOutputStream
 
 internal class SolutionParserTest {
 
-    private fun getSolvedStream() = javaClass.classLoader.getResourceAsStream("test-puzzle-c790345819993536-1.solution")!!.asInput()
-    private fun getNonSolvedStream()  = javaClass.classLoader.getResourceAsStream("test-puzzle-c790345819993536-2.solution")!!.asInput()
+    private fun getSolvedStream() = javaClass.classLoader.getResourceAsStream("test-puzzle-c790345819993536-1.solution")!!.source().buffer()
+    private fun getNonSolvedStream()  = javaClass.classLoader.getResourceAsStream("test-puzzle-c790345819993536-2.solution")!!.source().buffer()
 
     @Test
     fun parse() {
@@ -28,17 +28,17 @@ internal class SolutionParserTest {
 
     @Test
     fun write() {
-        val compare = getNonSolvedStream().readBytes()
+        val compare = getNonSolvedStream().readByteArray()
 
         val solution1 = SolutionParser.parse(getSolvedStream())
         solution1.name = "NONSOLVED SOLUTION"
         val out1 = ByteArrayOutputStream()
-        SolutionParser.write(solution1, out1.asOutput())
+        SolutionParser.write(solution1, out1.sink().buffer())
         assertThat(out1.toByteArray(), equalTo(compare))
 
         val solution2 = SolutionParser.parse(getNonSolvedStream())
         val out2 = ByteArrayOutputStream()
-        SolutionParser.write(solution2, out2.asOutput())
+        SolutionParser.write(solution2, out2.sink().buffer())
         assertThat(out2.toByteArray(), equalTo(compare))
     }
 }
