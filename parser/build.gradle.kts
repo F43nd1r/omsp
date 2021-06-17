@@ -20,17 +20,15 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-common"))
-                implementation("com.squareup.okio:okio-multiplatform:3.0.0-alpha.6")
+                api("com.squareup.okio:okio-multiplatform:3.0.0-alpha.6")
             }
         }
         val jvmMain by getting {
             dependencies {
-                //api("org.jetbrains.kotlinx:kotlinx-io-jvm:0.1.16")
             }
         }
         val linuxX64Main by getting {
             dependencies {
-                //api("org.jetbrains.kotlinx:kotlinx-io-native:0.1.16")
             }
         }
         val jvmTest by getting {
