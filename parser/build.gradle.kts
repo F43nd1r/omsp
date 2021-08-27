@@ -1,8 +1,8 @@
 plugins {
-    kotlin("multiplatform") version "1.5.10"
+    kotlin("multiplatform") version "1.5.30"
     `maven-publish`
     signing
-    id("org.jetbrains.dokka") version "1.4.32"
+    id("org.jetbrains.dokka") version "1.5.0"
 }
 
 group = "com.faendir.om"
@@ -20,7 +20,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-common"))
-                api("com.squareup.okio:okio-multiplatform:3.0.0-alpha.6")
+                api("com.squareup.okio:okio-multiplatform:3.0.0-alpha.9")
             }
         }
         val jvmMain by getting {
@@ -38,6 +38,11 @@ kotlin {
             }
         }
     }
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
