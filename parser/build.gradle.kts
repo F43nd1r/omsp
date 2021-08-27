@@ -1,5 +1,5 @@
 plugins {
-    kotlin("jvm") version "1.5.30"
+    kotlin("multiplatform") version "1.5.30"
     `maven-publish`
     signing
     id("org.jetbrains.dokka") version "1.5.0"
@@ -12,10 +12,32 @@ repositories {
     maven { setUrl("https://jitpack.io") }
 }
 
-dependencies {
-    api("com.squareup.okio:okio-multiplatform:3.0.0-alpha.9")
-    testImplementation(kotlin("test-junit"))
-    testImplementation("org.hamcrest:hamcrest:2.2")
+kotlin {
+    jvm()
+    linuxX64()
+
+    sourceSets {
+        val commonMain by getting {
+            dependencies {
+                implementation(kotlin("stdlib-common"))
+                api("com.squareup.okio:okio-multiplatform:3.0.0-alpha.9")
+            }
+        }
+        val jvmMain by getting {
+            dependencies {
+            }
+        }
+        val linuxX64Main by getting {
+            dependencies {
+            }
+        }
+        val jvmTest by getting {
+            dependencies {
+                implementation(kotlin("test-junit"))
+                implementation("org.hamcrest:hamcrest:2.2")
+            }
+        }
+    }
 }
 
 java {
@@ -34,33 +56,33 @@ val javadocJar = tasks.register<Jar>("javadocJar") {
 }
 
 publishing {
-    publications {
-        create<MavenPublication>("jvm") {
-            artifact(javadocJar)
-            pom {
-                artifactId = "parser"
-                name.set("om-parser")
-                description.set("Opus Magnum Solution/Puzzle Parser")
-                url.set("https://github.com/F43nd1r/omsp")
+    repositories {
+        mavenLocal()
+    }
+    publications.withType<MavenPublication> {
+        artifact(javadocJar)
+        pom {
+            name.set("om-parser")
+            description.set("Opus Magnum Solution/Puzzle Parser")
+            url.set("https://github.com/F43nd1r/omsp")
 
-                scm {
-                    connection.set("scm:git:https://github.com/F43nd1r/omsp.git")
-                    developerConnection.set("scm:git:git@github.com:F43nd1r/omsp.git")
-                    url.set("https://github.com/F43nd1r/omsp.git")
+            scm {
+                connection.set("scm:git:https://github.com/F43nd1r/omsp.git")
+                developerConnection.set("scm:git:git@github.com:F43nd1r/omsp.git")
+                url.set("https://github.com/F43nd1r/omsp.git")
+            }
+
+            licenses {
+                license {
+                    name.set("The Apache License, Version 2.0")
+                    distribution.set("repo")
                 }
+            }
 
-                licenses {
-                    license {
-                        name.set("The Apache License, Version 2.0")
-                        distribution.set("repo")
-                    }
-                }
-
-                developers {
-                    developer {
-                        id.set("f43nd1r")
-                        name.set("Lukas Morawietz")
-                    }
+            developers {
+                developer {
+                    id.set("f43nd1r")
+                    name.set("Lukas Morawietz")
                 }
             }
         }
