@@ -38,7 +38,7 @@ LIST: parts {
     INT: input/output index
     LIST: instructions {
         INT: position
-        CHAR: action (R, r, E, e, G, g, P, p, A, a, c, x, O)
+        CHAR: action (see below)
     }
     if part is track {
         LIST: track parts {
@@ -55,31 +55,49 @@ LIST: parts {
 }
 ```
 
+instructions:
+```
+R: rotate clockwise
+r: rotate counterclockwise
+E: extend
+e: retract
+G: grab
+g: drop
+P: pivot clockwise
+p: pivot counterclockwise
+A: move +
+a: move -
+c: repeat
+x: reset
+O: noop
+```
+
+
 ## Puzzle file format
 
 ```
 INT: puzzle format, currently 3
 STRING: puzzle name
-LONG: creator id (steam id?)
-LONG: bitfield for allowed glyphs
+LONG: creator id (steam id)
+LONG: bitfield for allowed things (see below)
 LIST: inputs {
     LIST: atoms {
-        BYTE: type
+        BYTE: type (see below)
         BYTE_POSITION: atom position
     }
     LIST: bonds {
-        BYTE: type
+        BYTE: type (see below)
         BYTE_POSITION: from
         BYTE_POSITION: to
     }
 }
-LIST: outputs {
+LIST: outputs (same as inputs) {
     LIST: atoms {
-        BYTE: type
+        BYTE: type (see below)
         BYTE_POSITION: atom position
     }
     LIST: bonds {
-        BYTE: type
+        BYTE: type (see below)
         BYTE_POSITION: from
         BYTE_POSITION: to
     }
@@ -109,7 +127,7 @@ if is production {
 }
 ```
 
-glyph type bitfield:
+allowed things type bitfield:
 ```
 2^0: arm
 2^1: multiarm
