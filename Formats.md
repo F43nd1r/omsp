@@ -13,6 +13,22 @@ Data Types:
 - BYTE_POSITION: `BYTE` x followed by `BYTE` y
 - LIST: list length as `INT` followed by content
 
+
+### Understanding positions:
+All possible `BYTE_POSITION`s:
+```
+                fc04    fd04    fe04    ff04    0004
+            fc03    fd03    fe03    ff03    0003    0103
+        fc02    fd02    fe02    ff02    0002    0102    0202 
+    fc01    fd01    fe01    ff01    0001    0101    0201    0301 
+fc00    fd00    fe00    ff00    0000    0100    0200    0300    0400
+    fdff    feff    ffff    00ff    01ff    02ff    03ff    04ff
+        fefe    fffe    00fe    01fe    02fe    03fe    04fe
+            fffd    00fd    01fd    02fd    03fd    04fd
+                00fc    01fc    02fc    03fc    04fc
+```
+`POSITION`s follow the same format but with integers instead of bytes.
+
 ## Solution file format
 ```
 INT: solution format, currently 7
@@ -179,3 +195,9 @@ bond type bitfield:
 2^2: black
 2^3: yellow
 ```
+
+# Sources
+
+ - [Puzzle file spec v3](https://steamcommunity.com/sharedfiles/filedetails/?id=1185668197)
+ - [C# BinaryReader](https://docs.microsoft.com/en-us/dotnet/api/system.io.binaryreader?view=net-5.0)
+ - [fazzone's solution parser](https://github.com/fazzone/opus/blob/master/blobs/src/blobs/codec/solution.cljc) (caution, also reverse-engineered. They were wrong about a few fields)
