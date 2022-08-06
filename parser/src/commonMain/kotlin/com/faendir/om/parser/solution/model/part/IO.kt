@@ -6,6 +6,7 @@ data class IO(
     override var index: Int,
     override var position: Position,
     override var rotation: Int,
+    override var number: Int,
     val type: IOType
 ) : Part() {
     override val name = type.key

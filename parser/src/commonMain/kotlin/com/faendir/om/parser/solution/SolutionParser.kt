@@ -15,18 +15,20 @@ object SolutionParser {
             if (reader.readInt() != 7) throw IllegalArgumentException("Input is not an Opus Magnum solution.")
             val puzzle = reader.readString()
             val name = reader.readString()
-            val solution = if (reader.readInt() == 0) {
-                NonSolvedSolution(puzzle, name)
-            } else {
-                reader.readInt()
-                val cycles = reader.readInt()
-                reader.readInt()
-                val cost = reader.readInt()
-                if (reader.readInt() != 2) throw IllegalArgumentException("Malformed solution.")
-                val area = reader.readInt()
-                if (reader.readInt() != 3) throw IllegalArgumentException("Malformed solution.")
-                val instructions = reader.readInt()
-                SolvedSolution(puzzle, name, cycles, cost, area, instructions)
+            val solution = when (val metricCount = reader.readInt()) {
+                0 -> NonSolvedSolution(puzzle, name)
+                4 -> {
+                    if (reader.readInt() != 0) throw IllegalArgumentException("Malformed solution.")
+                    val cycles = reader.readInt()
+                    if (reader.readInt() != 1) throw IllegalArgumentException("Malformed solution.")
+                    val cost = reader.readInt()
+                    if (reader.readInt() != 2) throw IllegalArgumentException("Malformed solution.")
+                    val area = reader.readInt()
+                    if (reader.readInt() != 3) throw IllegalArgumentException("Malformed solution.")
+                    val instructions = reader.readInt()
+                    SolvedSolution(puzzle, name, cycles, cost, area, instructions)
+                }
+                else -> throw IllegalArgumentException("Malformed solution: Illegal metric count: $metricCount")
             }
             solution.parts = reader.readList {
                 val partName = readString()
@@ -50,8 +52,8 @@ object SolutionParser {
                 ArmType.fromString(partName)?.let { Arm(number, position, rotation, size, steps, it) }
                         ?: pipeDetails?.let { Conduit(position, rotation, it.first, it.second) }
                         ?: trackPositions?.let { Track(position, it) }
-                        ?: IOType.fromString(partName)?.let { IO(index, position, rotation, it) }
-                        ?: GlyphType.fromString(partName)?.let { Glyph(position, rotation, it) }
+                        ?: IOType.fromString(partName)?.let { IO(index, position, rotation, number, it) }
+                        ?: GlyphType.fromString(partName)?.let { Glyph(position, rotation, number, it) }
                         ?: throw IllegalArgumentException("$partName is not a valid part type.")
             }
             return solution
@@ -60,13 +62,24 @@ object SolutionParser {
 
     private fun CSharpBinaryReader.readPosition() = Position(readInt(), readInt())
 
-    fun write(solution: Solution, output: BufferedSink) {
+    fun write(solution: Solution, output: BufferedSink, writeSolved: Boolean = false) {
         CSharpBinaryWriter(output).use { writer ->
             writer.write(7)
             writer.write(solution.puzzle)
             writer.write(solution.name)
-            // always write solutions as non-verified
-            writer.write(0)
+            if(writeSolved && solution is SolvedSolution) {
+                writer.write(4)
+                writer.write(0)
+                writer.write(solution.cycles)
+                writer.write(1)
+                writer.write(solution.cost)
+                writer.write(2)
+                writer.write(solution.area)
+                writer.write(3)
+                writer.write(solution.instructions)
+            } else {
+                writer.write(0)
+            }
             writer.write(solution.parts) { part ->
                 write(part.name)
                 write(1.toByte())

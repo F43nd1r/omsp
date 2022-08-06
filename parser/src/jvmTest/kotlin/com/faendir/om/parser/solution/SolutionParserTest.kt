@@ -10,11 +10,14 @@ import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.instanceOf
 import org.junit.Test
 import java.io.ByteArrayOutputStream
+import java.io.FileOutputStream
 
 internal class SolutionParserTest {
 
-    private fun getSolvedStream() = javaClass.classLoader.getResourceAsStream("test-puzzle-c790345819993536-1.solution")!!.source().buffer()
-    private fun getNonSolvedStream()  = javaClass.classLoader.getResourceAsStream("test-puzzle-c790345819993536-2.solution")!!.source().buffer()
+    private fun resource(name: String) = javaClass.classLoader.getResourceAsStream(name)!!.source().buffer()
+
+    private fun getSolvedStream() = resource("test-puzzle-c790345819993536-1.solution")
+    private fun getNonSolvedStream()  = resource("test-puzzle-c790345819993536-2.solution")
 
     @Test
     fun parse() {
@@ -40,5 +43,19 @@ internal class SolutionParserTest {
         val out2 = ByteArrayOutputStream()
         SolutionParser.write(solution2, out2.sink().buffer())
         assertThat(out2.toByteArray(), equalTo(compare))
+    }
+
+    @Test
+    fun `should rewrite solution name correctly`() {
+        val tournament = SolutionParser.parse(resource("RADIO_RECEIVERS_tournament.solution"))
+        val steamBytes = resource("RADIO_RECEIVERS_steam.solution").readByteArray()
+
+        tournament.puzzle = "w2788067896"
+        FileOutputStream("rewrite.solution").use { SolutionParser.write(tournament, it.sink().buffer(), writeSolved = true) }
+
+        val out1 = ByteArrayOutputStream()
+        SolutionParser.write(tournament, out1.sink().buffer(), writeSolved = true)
+        assertThat(out1.toByteArray(), equalTo(steamBytes))
+
     }
 }

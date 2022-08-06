@@ -34,7 +34,7 @@ fc00    fd00    fe00    ff00    0000    0100    0200    0300    0400
 INT: solution format, currently 7
 STRING: puzzle file name
 STRING: solution name
-INT: 1 for solved, 0 for not solved
+INT: 4 for solved, 0 for not solved (probably number of metrics in file)
 if solved {
     INT: always 0
     INT: cycles
