@@ -51,7 +51,6 @@ internal class SolutionParserTest {
         val steamBytes = resource("RADIO_RECEIVERS_steam.solution").readByteArray()
 
         tournament.puzzle = "w2788067896"
-        FileOutputStream("rewrite.solution").use { SolutionParser.write(tournament, it.sink().buffer(), writeSolved = true) }
 
         val out1 = ByteArrayOutputStream()
         SolutionParser.write(tournament, out1.sink().buffer(), writeSolved = true)
