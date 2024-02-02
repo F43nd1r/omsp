@@ -27,7 +27,7 @@ class CSharpBinaryReader(private val input: BufferedSource) : Closeable {
         var shift = 0
         do {
             val b = input.readByte().toLong()
-            count = count or (b and 0x7F) shl shift
+            count = count or ((b and 0x7F) shl shift)
             shift += 7
         } while (b and 0x80 != 0L)
         return count

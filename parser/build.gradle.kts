@@ -1,16 +1,11 @@
 plugins {
-    kotlin("multiplatform") version "1.5.30"
+    kotlin("multiplatform") version "1.9.22"
     `maven-publish`
     signing
-    id("org.jetbrains.dokka") version "1.5.0"
+    id("org.jetbrains.dokka") version "1.9.10"
 }
 
 group = "com.faendir.om"
-
-repositories {
-    mavenCentral()
-    maven { setUrl("https://jitpack.io") }
-}
 
 kotlin {
     jvm()
@@ -19,8 +14,7 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(kotlin("stdlib-common"))
-                api("com.squareup.okio:okio-multiplatform:3.0.0-alpha.9")
+                api("com.squareup.okio:okio:3.7.0")
             }
         }
         val jvmMain by getting {
