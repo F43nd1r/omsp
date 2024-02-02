@@ -43,18 +43,21 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
     kotlinOptions.jvmTarget = "1.8"
 }
 
-val javadocJar = tasks.register<Jar>("javadocJar") {
-    group = "documentation"
-    from(tasks["dokkaHtml"])
-    archiveClassifier.set("javadoc")
-}
-
 publishing {
     repositories {
         mavenLocal()
     }
     publications.withType<MavenPublication> {
-        artifact(javadocJar)
+        val publication = this
+        val dokkaJar = tasks.register<Jar>("${publication.name}DokkaJar") {
+            group = JavaBasePlugin.DOCUMENTATION_GROUP
+            description = "Assembles Kotlin docs with Dokka into a Javadoc jar"
+            archiveClassifier.set("javadoc")
+            from(tasks.dokkaHtml)
+            archiveBaseName.set("${archiveBaseName.get()}-${publication.name}")
+        }
+        artifact(dokkaJar)
+
         pom {
             name.set("om-parser")
             description.set("Opus Magnum Solution/Puzzle Parser")
