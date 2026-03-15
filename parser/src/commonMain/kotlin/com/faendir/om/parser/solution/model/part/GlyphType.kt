@@ -11,7 +11,10 @@ enum class GlyphType(internal val key: String, val shape : Set<Position>) {
     CALCIFICATION("glyph-calcification", setOf(0 to 0)),
     DUPLICATION("glyph-duplication", setOf(0 to 0, 1 to 0)),
     PROJECTION("glyph-projection", setOf(0 to 0, 1 to 0)),
+    REJECTION("glyph-rejection", setOf(0 to 0, 1 to 0));
     PURIFICATION("glyph-purification", setOf(0 to 0, 1 to 0, 0 to 1)),
+    DIVISION("glyph-division", setOf(0 to 0, 1 to 0, -1 to 0));
+    PROLIFERATION("glyph-proliferation", setOf(0 to 0, 1 to 0, -1 to 1, 0 to 1, 1 to 1, 1 to -1));
     ANIMISMUS("glyph-life-and-death", setOf(0 to 0, 1 to 0, 0 to 1, 1 to -1)),
     DISPOSAL("glyph-disposal", setOf(0 to 0, 1 to 0, 0 to 1, -1 to 1, -1 to 0, 0 to -1, 1 to -1)),
     UNIFICATION("glyph-unification", setOf(0 to 0, 0 to 1, -1 to 1, 0 to -1, 1 to -1)),

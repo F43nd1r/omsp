@@ -16,12 +16,19 @@ enum class Tool(internal val mask: Long) {
     ANIMISMUS(0x00010000),
     DISPOSAL(0x00020000),
     QUINTESSENCE_GLYPHS(0x00040000),
+
+    REJECTION(0x00080000),
+    DIVISION(0x00100000),
+    PROLIFERATION(0x00200000),
+
     INSTRUCTION_GRAB_AND_TURN(0x00400000),
     INSTRUCTION_DROP(0x00800000),
     INSTRUCTION_RESET(0x01000000),
     INSTRUCTION_REPEAT(0x02000000),
     INSTRUCTION_PIVOT(0x04000000),
+
     VAN_BERLOS_WHEEL(0x10000000);
+    RAVARIS_WHEEL(0x20000000);
 
     companion object {
         fun fromBits(bits: Long): Set<Tool> = values().filter { (bits and it.mask) != 0L}.toSet()
