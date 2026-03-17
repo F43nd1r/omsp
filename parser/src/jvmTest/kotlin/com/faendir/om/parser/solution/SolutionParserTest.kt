@@ -18,6 +18,7 @@ internal class SolutionParserTest {
 
     private fun getSolvedStream() = resource("test-puzzle-c790345819993536-1.solution")
     private fun getNonSolvedStream()  = resource("test-puzzle-c790345819993536-2.solution")
+    private fun getDLCStream()  = resource("sample-c737537958035598-1.solution")
 
     @Test
     fun parse() {
@@ -26,6 +27,9 @@ internal class SolutionParserTest {
 
         val solution2 = SolutionParser.parse(getNonSolvedStream())
         assertThat(solution2, instanceOf(NonSolvedSolution::class.java))
+
+        val solution3 = SolutionParser.parse(getDLCStream())
+        assertThat(solution3, instanceOf(SolvedSolution::class.java))
         //TODO: Assert solution content
     }
 
