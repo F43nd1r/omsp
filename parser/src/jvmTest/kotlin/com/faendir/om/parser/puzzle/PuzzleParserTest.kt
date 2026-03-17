@@ -15,29 +15,35 @@ internal class PuzzleParserTest {
     private fun getDLCStream() = javaClass.classLoader.getResourceAsStream("c737537958035598.puzzle")!!.source().buffer()
 
     @Test
-    fun parse() {
+    fun `should parse production puzzle`() {
         val puzzle = PuzzleParser.parse(getProductionStream())
         MatcherAssert.assertThat(puzzle, Matchers.instanceOf(Puzzle::class.java))
-
-        val puzzle2 = PuzzleParser.parse(getDLCStream())
-        MatcherAssert.assertThat(puzzle2, Matchers.instanceOf(Puzzle::class.java))
         //TODO: Assert puzzle content
     }
 
     @Test
-    fun write() {
+    fun `should parse DLC puzzle`() {
+        val puzzle = PuzzleParser.parse(getDLCStream())
+        MatcherAssert.assertThat(puzzle, Matchers.instanceOf(Puzzle::class.java))
+    }
+
+    @Test
+    fun `should write production puzzle identically`() {
         val compare = getProductionStream().readByteArray()
 
         val puzzle = PuzzleParser.parse(getProductionStream())
         val out = ByteArrayOutputStream()
         PuzzleParser.write(puzzle, out.sink().buffer())
         MatcherAssert.assertThat(out.toByteArray(), Matchers.equalTo(compare))
+    }
 
-        val compare2 = getDLCStream().readByteArray()
+    @Test
+    fun `should write DLC puzzle identically`() {
+        val compare = getDLCStream().readByteArray()
 
-        val puzzle2 = PuzzleParser.parse(getDLCStream())
-        val out2 = ByteArrayOutputStream()
-        PuzzleParser.write(puzzle2, out2.sink().buffer())
-        MatcherAssert.assertThat(out2.toByteArray(), Matchers.equalTo(compare2))
+        val puzzle = PuzzleParser.parse(getDLCStream())
+        val out = ByteArrayOutputStream()
+        PuzzleParser.write(puzzle, out.sink().buffer())
+        MatcherAssert.assertThat(out.toByteArray(), Matchers.equalTo(compare))
     }
 }
