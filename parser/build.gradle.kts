@@ -1,8 +1,8 @@
 plugins {
-    kotlin("multiplatform") version "1.9.22"
+    kotlin("multiplatform") version "2.3.20"
     `maven-publish`
     signing
-    id("org.jetbrains.dokka") version "1.9.10"
+    id("org.jetbrains.dokka") version "2.1.0"
 }
 
 group = "com.faendir.om"
@@ -14,7 +14,7 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                api("com.squareup.okio:okio:3.7.0")
+                api("com.squareup.okio:okio:3.17.0")
             }
         }
         val jvmMain by getting {
@@ -28,7 +28,7 @@ kotlin {
         val jvmTest by getting {
             dependencies {
                 implementation(kotlin("test-junit"))
-                implementation("org.hamcrest:hamcrest:2.2")
+                implementation("org.hamcrest:hamcrest:3.0")
             }
         }
     }
@@ -40,7 +40,9 @@ java {
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-    kotlinOptions.jvmTarget = "1.8"
+    compilerOptions {
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_1_8)
+    }
 }
 
 publishing {
@@ -53,7 +55,7 @@ publishing {
             group = JavaBasePlugin.DOCUMENTATION_GROUP
             description = "Assembles Kotlin docs with Dokka into a Javadoc jar"
             archiveClassifier.set("javadoc")
-            from(tasks.dokkaHtml)
+            from(tasks.named("dokkaGenerateHtml"))
             archiveBaseName.set("${archiveBaseName.get()}-${publication.name}")
         }
         artifact(dokkaJar)

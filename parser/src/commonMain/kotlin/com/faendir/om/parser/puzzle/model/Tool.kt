@@ -27,11 +27,12 @@ enum class Tool(internal val mask: Long) {
     INSTRUCTION_REPEAT(0x02000000),
     INSTRUCTION_PIVOT(0x04000000),
 
-    VAN_BERLOS_WHEEL(0x10000000);
-    RAVARIS_WHEEL(0x20000000);
+    VAN_BERLOS_WHEEL(0x10000000),
+    RAVARIS_WHEEL(0x20000000),
+    ;
 
     companion object {
-        fun fromBits(bits: Long): Set<Tool> = values().filter { (bits and it.mask) != 0L}.toSet()
+        fun fromBits(bits: Long): Set<Tool> = Tool.entries.filter { (bits and it.mask) != 0L}.toSet()
     }
 }
 
