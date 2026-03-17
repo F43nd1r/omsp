@@ -13,6 +13,7 @@ enum class Action(val key: Char) {
     BACK('a'),
     REPEAT('C'),
     RESET('X'),
+    HALT('B'),
     NOOP('O'),
     EMPTY(' ');
 

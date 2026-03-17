@@ -18,31 +18,56 @@ internal class SolutionParserTest {
 
     private fun getSolvedStream() = resource("test-puzzle-c790345819993536-1.solution")
     private fun getNonSolvedStream()  = resource("test-puzzle-c790345819993536-2.solution")
+    private fun getDLCStream()  = resource("sample-c737537958035598-1.solution")
 
     @Test
-    fun parse() {
-        val solution1 = SolutionParser.parse(getSolvedStream())
-        assertThat(solution1, instanceOf(SolvedSolution::class.java))
-
-        val solution2 = SolutionParser.parse(getNonSolvedStream())
-        assertThat(solution2, instanceOf(NonSolvedSolution::class.java))
+    fun `should parse solved solution`() {
+        val solution = SolutionParser.parse(getSolvedStream())
+        assertThat(solution, instanceOf(SolvedSolution::class.java))
         //TODO: Assert solution content
     }
 
     @Test
-    fun write() {
+    fun `should parse non-solved solution`() {
+        val solution = SolutionParser.parse(getNonSolvedStream())
+        assertThat(solution, instanceOf(NonSolvedSolution::class.java))
+    }
+
+    @Test
+    fun `should parse DLC solution`() {
+        val solution = SolutionParser.parse(getDLCStream())
+        assertThat(solution, instanceOf(SolvedSolution::class.java))
+    }
+
+    @Test
+    fun `should write solved solution as non-solved by default`() {
         val compare = getNonSolvedStream().readByteArray()
 
-        val solution1 = SolutionParser.parse(getSolvedStream())
-        solution1.name = "NONSOLVED SOLUTION"
-        val out1 = ByteArrayOutputStream()
-        SolutionParser.write(solution1, out1.sink().buffer())
-        assertThat(out1.toByteArray(), equalTo(compare))
+        val solution = SolutionParser.parse(getSolvedStream())
+        solution.name = "NONSOLVED SOLUTION"
+        val out = ByteArrayOutputStream()
+        SolutionParser.write(solution, out.sink().buffer())
+        assertThat(out.toByteArray(), equalTo(compare))
+    }
 
-        val solution2 = SolutionParser.parse(getNonSolvedStream())
-        val out2 = ByteArrayOutputStream()
-        SolutionParser.write(solution2, out2.sink().buffer())
-        assertThat(out2.toByteArray(), equalTo(compare))
+    @Test
+    fun `should write non-solved solution identically`() {
+        val compare = getNonSolvedStream().readByteArray()
+
+        val solution = SolutionParser.parse(getNonSolvedStream())
+        val out = ByteArrayOutputStream()
+        SolutionParser.write(solution, out.sink().buffer())
+        assertThat(out.toByteArray(), equalTo(compare))
+    }
+
+    @Test
+    fun `should write DLC solution identically`() {
+        val compare = getDLCStream().readByteArray()
+
+        val solution = SolutionParser.parse(getDLCStream())
+        val out = ByteArrayOutputStream()
+        SolutionParser.write(solution, out.sink().buffer(), writeSolved = true)
+        assertThat(out.toByteArray(), equalTo(compare))
     }
 
     @Test
