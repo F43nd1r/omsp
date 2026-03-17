@@ -149,17 +149,17 @@ allowed things type bitfield:
 2^1: multiarm
 2^2: piston
 2^3: track
-2^7: bonder
-2^8: unbonder
-2^9: multibonder
-2^10: triplex bonder
-2^11: calcification
-2^12: duplication
-2^13: projection
-2^14: purification
-2^15: animismus
-2^16: disposal
-2^17: quintessence glyphs
+2^8: bonder
+2^9: unbonder
+2^10: multibonder
+2^11: triplex bonder
+2^12: calcification
+2^13: duplication
+2^14: projection
+2^15: purification
+2^16: animismus
+2^17: disposal
+2^18: quintessence glyphs
 2^22: grab and rotation
 2^23: drop
 2^24: reset
